@@ -1,4 +1,4 @@
-export const DEBUG_MODE = true
+export const DEBUG_MODE = false
 
 export const SCENE_IDS = {
     HERO: "hero-scene",
@@ -10,12 +10,13 @@ export const SCENE_IDS = {
 
 export const PRODUCT_CAROUSEL_ITEMS = [
     {
-        id: 1,
-        image: "/assets/images/filmstrip_panel_01.png",
-        title: "Simple To Use.",
-        subtitle: "As simple as a camera can get",
+        id: 3,
+        image: "/assets/images/filmstrip_panel_04.png",
+        title: "Tactile Buttons",
+        subtitle: "Just feels right - feels better.",
         cardType: 'overlay',
     },
+
     {
         id: 2,
         image: "/assets/images/filmstrip_panel_02.png",
@@ -24,10 +25,10 @@ export const PRODUCT_CAROUSEL_ITEMS = [
         specs: [{ label: 'Focal Length', value: '24mm' }, { label: 'Aperture', value: 'f/1.4' }, { label: 'Resolution', value: '4K' }, { label: 'Zoom', value: '20x' }],
     },
     {
-        id: 3,
-        image: "/assets/images/filmstrip_panel_04.png",
-        title: "Tactile Buttons",
-        subtitle: "Just feels right - feels better.",
+        id: 1,
+        image: "/assets/images/filmstrip_panel_01.png",
+        title: "Simple To Use.",
+        subtitle: "As simple as a camera can get",
         cardType: 'overlay',
     },
     {

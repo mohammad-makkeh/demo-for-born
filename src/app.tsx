@@ -615,12 +615,27 @@ function App() {
     const carouselImageProgressByIndex = carouselImageElements.map((_, index) =>
       carouselImageCount <= 1 ? 0 : index / (carouselImageCount - 1)
     );
+    const carouselImageSetXPercent = carouselImageElements.map((imgElement) =>
+      gsap.quickSetter(imgElement, "xPercent")
+    );
     const carouselImagePanMaxPercent = 25;
     const carouselImagePanDirection = -1;
     const carouselImageMinSpeedFactor = 0.3;
     const carouselImageMaxSpeedFactor = 1.2;
     const carouselImageInfluenceRangeInItems = 2.5;
     const carouselImageProximityExponent = 1.6;
+
+    const carouselImageSpeedRange =
+      carouselImageMaxSpeedFactor - carouselImageMinSpeedFactor;
+    const carouselImageItemSpan = Math.max(1, carouselImageCount - 1);
+    const carouselImageInfluenceRangeNormalized = Math.min(
+      1,
+      carouselImageInfluenceRangeInItems / carouselImageItemSpan
+    );
+    const carouselImageInfluenceRangeInverse =
+      carouselImageInfluenceRangeNormalized > 0
+        ? 1 / carouselImageInfluenceRangeNormalized
+        : 0;
 
     ScrollTrigger.create({
       trigger: productCarouselTrack,
@@ -629,29 +644,31 @@ function App() {
       onUpdate: (self) => {
         if (!carouselImageCount) return;
         const scrollProgress = self.progress;
-        const itemSpan = Math.max(1, carouselImageCount - 1);
-        const influenceRange = Math.min(1, carouselImageInfluenceRangeInItems / itemSpan);
+        const basePanAmount = scrollProgress * carouselImagePanMaxPercent;
 
-        carouselImageElements.forEach((imgElement, index) => {
-          const itemProgress = carouselImageProgressByIndex[index] ?? 0;
-          const distanceFromProgress = Math.abs(scrollProgress - itemProgress);
-          const normalizedDistance = influenceRange === 0
-            ? 1
-            : Math.min(distanceFromProgress / influenceRange, 1);
-          const proximity = 1 - normalizedDistance;
+        for (let index = 0; index < carouselImageCount; index += 1) {
+          const itemProgress = carouselImageProgressByIndex[index];
+          const progressDelta = scrollProgress - itemProgress;
+          const distanceFromProgress = progressDelta < 0 ? -progressDelta : progressDelta;
+          const normalizedDistance = carouselImageInfluenceRangeInverse > 0
+            ? distanceFromProgress * carouselImageInfluenceRangeInverse
+            : 1;
+          const clampedDistance = normalizedDistance > 1 ? 1 : normalizedDistance;
+          const proximity = 1 - clampedDistance;
           const easedProximity = Math.pow(proximity, carouselImageProximityExponent);
-          const speedFactor = gsap.utils.interpolate(
-            carouselImageMinSpeedFactor,
-            carouselImageMaxSpeedFactor,
-            easedProximity
-          );
-          const panAmount = scrollProgress * carouselImagePanMaxPercent * speedFactor;
-          const clampedPan = gsap.utils.clamp(0, carouselImagePanMaxPercent, panAmount);
+          const speedFactor = carouselImageMinSpeedFactor +
+            (carouselImageSpeedRange * easedProximity);
+          const panAmount = basePanAmount * speedFactor;
+          const clampedPan = panAmount > carouselImagePanMaxPercent
+            ? carouselImagePanMaxPercent
+            : panAmount < 0
+              ? 0
+              : panAmount;
 
-          gsap.set(imgElement, {
-            xPercent: carouselImagePanDirection * clampedPan,
-          });
-        });
+          carouselImageSetXPercent[index](
+            carouselImagePanDirection * clampedPan
+          );
+        }
       }
     })
 
@@ -672,7 +689,7 @@ function App() {
         <h1 data-name="hero-title" className="text-bone text-9xl mt-20 font-bold z-10 relative">IRIS</h1>
         <div data-name="growing-circle" className="w-[120vw] h-[120vw] scale-0 bg-ink rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"></div>
         <div data-name="fully-dotted-grid" className="fully-dotted-grid opacity-0 z-10">
-          <FlickeringGrid className="absolute top-0 left-0 w-full h-full z-10" />
+          <FlickeringGrid className="absolute top-0 left-0 w-full h-full z-10" gridGap={25} flickerChance={2} />
           <div data-name="dotted-grid-item-ISO" className="text-ink opacity-60 text-xl absolute top-8 right-10 font-mono">ISO 400</div>
           <div data-name="dotted-grid-item-F" className="text-ink opacity-60 text-xl absolute top-8 left-10 font-mono">F/1.4</div>
           <div data-name="dotted-grid-item-4k" className="text-ink opacity-60 text-xl absolute bottom-8 right-10 font-mono">4k</div>
