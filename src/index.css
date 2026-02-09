@@ -1,7 +1,7 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 .bodoni-moda {
-  font-family: "Bodoni Moda", serif;
+  font-family: 'Bodoni Moda', serif;
   font-optical-sizing: auto;
   font-style: normal;
 }
@@ -20,12 +20,14 @@
   --color-bone: #f5f2ea;
   --color-paper: #f6f3ea;
   --color-amber: #ffb25b;
+  --color-teal-rbg: 89 205 201;
   --color-teal: #59cdc9;
   --color-gray: #8a8f98;
   --text-display-xl: clamp(4rem, 15vw, 20rem);
   --text-display-lg: clamp(3rem, 10vw, 12rem);
   --text-display-md: clamp(2rem, 6vw, 6rem);
   --text-display-sm: clamp(1.5rem, 4vw, 3rem);
+  --text-display-xs: clamp(1rem, 2vw, 1.5rem);
   --text-heading: clamp(1.25rem, 3vw, 2.5rem);
   --text-body-lg: clamp(1rem, 1.5vw, 1.25rem);
   --text-body: clamp(0.875rem, 1.2vw, 1rem);
@@ -43,7 +45,7 @@ body,
 #root {
   background: var(--ink);
   color: var(--bone);
-  font-family: "Bodoni Moda", serif;
+  font-family: 'Bodoni Moda', serif;
   overflow-x: hidden;
 }
 br {
@@ -57,9 +59,22 @@ br {
 .scan-line-glow {
   box-shadow:
     0 0 10px 0 var(--color-teal),
-    0 0 20px 2px var(--color-teal),
-    0 0 40px 8px var(--color-teal),
-    0 0 60px 16px var(--color-teal);
+    0 0 15px 5px var(--color-teal);
+}
+
+.scan-line-shadow {
+  box-shadow:
+    0 0 10px 0 rgba(var(--color-teal-rbg)),
+    0 0 20px 2px rgba(var(--color-teal-rbg) / 0.9),
+    0 0 40px 8px rgba(var(--color-teal-rbg) / 0.9),
+    0 0 60px 16px rgba(var(--color-teal-rbg) / 0.8),
+    0 0 80px 22px rgba(var(--color-teal-rbg) / 0.8),
+    0 0 100px 26px rgba(var(--color-teal-rbg) / 0.7),
+    0 0 120px 30px rgba(var(--color-teal-rbg) / 0.7),
+    0 0 140px 34px rgba(var(--color-teal-rbg) / 0.6),
+    0 0 160px 38px rgba(var(--color-teal-rbg) / 1),
+    0 0 180px 42px rgba(var(--color-teal-rbg) / 1),
+    0 0 200px 46px rgba(var(--color-teal-rbg) / 1);
 }
 
 .text-wheel-container {
@@ -90,20 +105,27 @@ br {
   backface-visibility: hidden;
 }
 
-[data-name="focus-transition-lens-macro-container"] {
+[data-name='focus-transition-lens-macro-container'] {
   -webkit-mask-image: radial-gradient(
     circle at center,
     transparent 0,
     transparent var(--hole),
     black calc(var(--hole) + 1px)
   );
-  mask-image: radial-gradient(
-    circle at center,
-    transparent 0,
-    transparent var(--hole),
-    black calc(var(--hole) + 1px)
-  );
+  mask-image: radial-gradient(circle at center, transparent 0, transparent var(--hole), black calc(var(--hole) + 1px));
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   overflow: hidden;
+}
+
+.fade-in {
+  animation: fade-in 0.6s ease-in-out;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
