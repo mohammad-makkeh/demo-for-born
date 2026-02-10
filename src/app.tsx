@@ -18,7 +18,7 @@ initGsap();
 function App() {
   const { progress, isLoading, error } = usePreloadAssets({
     root: document,
-    videoMode: 'metadata',
+    videoMode: 'canplaythrough',
     weights: { fonts: 10, images: 60, videos: 40 },
     timeoutMs: 20000,
     rescanDelayMs: 200,
