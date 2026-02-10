@@ -1,6 +1,7 @@
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
 import { initGsap } from './utils/gsap';
 import {
   BASE_URL,
@@ -24,6 +25,24 @@ function App() {
     rescanDelayMs: 200,
     lockScroll: true
   });
+
+  // Lenis smooth scroll + GSAP ScrollTrigger integration
+  useGSAP(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      syncTouch: true
+    });
+    lenis.on('scroll', ScrollTrigger.update);
+    const raf = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(raf);
+    gsap.ticker.lagSmoothing(0);
+    return () => {
+      gsap.ticker.remove(raf);
+      lenis.destroy();
+    };
+  }, []);
 
   useGSAP(() => {
     const titleSplit = new SplitText(`#${SCENE_IDS.HERO} [data-name="hero-title"]`, { type: 'chars' });
@@ -1116,7 +1135,7 @@ function App() {
       <section
         id={SCENE_IDS.HERO}
         className={
-          'relative w-full flex flex-col items-center py-12 h-screen min-h-screen bg-ink text-bone overflow-hidden transform-3d perspective-distant' +
+          'relative w-full flex flex-col items-center py-12 h-screen min-h-screen bg-ink text-bone overflow-hidden transform-3d perspective-distant will-change-transform ' +
           (!isLoading ? ' fade-in' : '')
         }
       >
@@ -1124,12 +1143,12 @@ function App() {
           data-name="hero-still"
           src={BASE_URL + '/assets/images/hero-still.webp'}
           alt="Hero"
-          className="w-[50vw] h-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover z-20 transform-3d"
+          className="w-[50vw] h-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover z-20 transform-3d will-change-transform"
         />
 
         <h1
           data-name="hero-title"
-          className="text-bone text-display-lg font-bold absolute top-1/12 left-1/2 -translate-x-1/2 z-10"
+          className="text-bone text-display-lg font-bold absolute top-1/12 left-1/2 -translate-x-1/2 z-10 will-change-transform"
         >
           IRIS
         </h1>
@@ -1139,37 +1158,37 @@ function App() {
         >
           Close your camera and...
         </p>
-        <div data-name="fully-dotted-grid" className="fully-dotted-grid opacity-0 z-30">
+        <div data-name="fully-dotted-grid" className="fully-dotted-grid opacity-0 z-30 will-change-[opacity]">
           <FlickeringGrid className="absolute top-0 left-0 w-full h-full z-30 bg-bone" gridGap={25} flickerChance={2} />
           <div
             data-name="dotted-grid-item-ISO"
-            className="text-ink opacity-60 text-display-xs absolute top-8 right-10 font-mono z-30"
+            className="text-ink opacity-60 text-display-xs absolute top-8 right-10 font-mono z-30 will-change-transform"
           >
             ISO 400
           </div>
           <div
             data-name="dotted-grid-item-F"
-            className="text-ink opacity-60 text-display-xs absolute top-8 left-10 font-mono z-30"
+            className="text-ink opacity-60 text-display-xs absolute top-8 left-10 font-mono z-30 will-change-transform"
           >
             F/1.4
           </div>
           <div
             data-name="dotted-grid-item-4k"
-            className="text-ink opacity-60 text-display-xs absolute bottom-8 right-10 font-mono z-30"
+            className="text-ink opacity-60 text-display-xs absolute bottom-8 right-10 font-mono z-30 will-change-transform"
           >
             4k
           </div>
           <div
             data-name="dotted-grid-item-24p"
-            className="text-ink opacity-60 text-display-xs absolute bottom-8 left-10 font-mono z-30"
+            className="text-ink opacity-60 text-display-xs absolute bottom-8 left-10 font-mono z-30 will-change-transform"
           >
             24p
           </div>
         </div>
-        <h2 data-name="header-2" className="text-ink text-9xl z-30 absolute top-28 w-full text-center left-0">
+        <h2 data-name="header-2" className="text-ink text-9xl z-30 absolute top-28 w-full text-center left-0 will-change-transform">
           Open the Iris
         </h2>
-        <div id="product-reveal" className="w-[30vh] h-[45vh] absolute bottom-1/5 left-1/2 -translate-x-1/2 z-30">
+        <div id="product-reveal" className="w-[30vh] h-[45vh] absolute bottom-1/5 left-1/2 -translate-x-1/2 z-30 will-change-[transform,opacity]">
           <img
             data-name="hero-product-silhouette"
             src={BASE_URL + '/assets/images/product_silhouette.webp'}
@@ -1184,11 +1203,11 @@ function App() {
           />
           <div
             data-name="scan-line"
-            className="scan-line-glow w-[120%] h-1 bg-teal absolute top-0 left-1/2 -translate-x-1/2 z-30 opacity-0"
+            className="scan-line-glow w-[120%] h-1 bg-teal absolute top-0 left-1/2 -translate-x-1/2 z-30 opacity-0 will-change-[opacity]"
           ></div>
           <div
             data-name="scan-line-shadow"
-            className="scan-line-shadow w-[200%] h-8 bg-teal absolute top-0 left-1/2 -translate-x-1/2 z-20 opacity-50"
+            className="scan-line-shadow w-[200%] h-8 bg-teal absolute top-0 left-1/2 -translate-x-1/2 z-20 opacity-50 will-change-[opacity]"
           ></div>
         </div>
       </section>
@@ -1196,10 +1215,10 @@ function App() {
       {/* SCENE 02 - CINEMA */}
       <section id={SCENE_IDS.CINEMA} className="w-full h-screen min-h-screen bg-ink">
         <div className="inner relative w-full px-12 py-20 flex h-screen min-h-screen">
-          <div data-name="cinema-still-container" className="w-[50%] flex gap-4 shrink-0 grow">
+          <div data-name="cinema-still-container" className="w-[50%] flex gap-4 shrink-0 grow will-change-transform">
             <div
               data-name="cinema-still"
-              className="cinema-still-hero rounded-xl overflow-hidden w-full relative grow shrink-0"
+              className="cinema-still-hero rounded-xl overflow-hidden w-full relative grow shrink-0 will-change-transform"
             >
               <img
                 data-name="city-night-sharp"
@@ -1228,7 +1247,7 @@ function App() {
                 />
               </div>
             </div>
-            <div data-name="cinema-still" className="rounded-xl overflow-hidden w-full relative shrink">
+            <div data-name="cinema-still" className="rounded-xl overflow-hidden w-full relative shrink will-change-transform">
               <img
                 data-name="cinema-still-img"
                 src={BASE_URL + '/assets/images/hero_still_02.webp'}
@@ -1236,7 +1255,7 @@ function App() {
                 className="absolute top-0 right-0 bottom-0 h-full object-cover"
               />
             </div>
-            <div data-name="cinema-still" className="rounded-xl overflow-hidden w-full relative shrink">
+            <div data-name="cinema-still" className="rounded-xl overflow-hidden w-full relative shrink will-change-transform">
               <img
                 data-name="cinema-still-img"
                 src={BASE_URL + '/assets/images/hero_still_03.webp'}
@@ -1247,17 +1266,17 @@ function App() {
           </div>
           <div data-name="cinema-copy-container" className="relative w-[50%] pl-20 shrink">
             <div className="absolute inset-0 left-20 w-[40vw] h-full flex flex-col justify-center">
-              <h2 data-name="cinema-title" className="text-bone text-display-md leading-none  font-bold z-10 relative">
+              <h2 data-name="cinema-title" className="text-bone text-display-md leading-none font-bold z-10 relative will-change-transform">
                 Not content.
                 <br /> Cinema.
               </h2>
               <p
                 data-name="cinema-subtitle"
-                className="text-bone text-body-lg uppercase tracking-widest font-mono opacity-60 mt-8"
+                className="text-bone text-body-lg uppercase tracking-widest font-mono opacity-60 mt-8 will-change-transform"
               >
                 The difference is intention.
               </p>
-              <p data-name="cinema-body" className="text-bone text-body max-w-[35ch] mt-3">
+              <p data-name="cinema-body" className="text-bone text-body max-w-[35ch] mt-3 will-change-transform">
                 Lock exposure with a tap. Pull focus with your thumb. Let color stay honest when the light runs away.
               </p>
             </div>
@@ -1290,36 +1309,36 @@ function App() {
         >
           <div
             data-name="focus-title-wheel"
-            className="col-span-1 flex items-center justify-center h-full text-wheel-container text-bone z-10 relative"
+            className="col-span-1 flex items-center justify-center h-full text-wheel-container text-bone z-10 relative will-change-transform"
           >
             <div className="text-wheel-inner">
               <p className="text-wheel text-shadow-2xs text-9xl font-bold">FOCUS</p>
             </div>
           </div>
-          <div data-name="focus-object-container" className="col-span-1 relative w-full h-full overflow-hidden">
+          <div data-name="focus-object-container" className="col-span-1 relative w-full h-full overflow-hidden will-change-transform">
             <img
               data-name="focus-object-img"
               src={BASE_URL + '/assets/images/ch2_subject_still.webp'}
               alt="Focus"
-              className="absolute top-0 left-0 w-full h-full object-cover"
+              className="absolute top-0 left-0 w-full h-full object-cover will-change-[filter,transform]"
             />
             <img
               data-name="focus-grid-svg"
+              className="absolute top-[20%] right-[18%] w-[25vw] h-[25vw] object-cover will-change-transform"
               src={BASE_URL + '/assets/svgs/focus_grid.svg'}
               alt="grid"
-              className="absolute top-[20%] right-[18%] w-[25vw] h-[25vw] object-cover"
             />
           </div>
         </div>
         <div
           data-name="focus-transition-lens-macro-container"
-          className="absolute inset-0 z-30 w-screen h-screen invisible opacity-0"
+          className="absolute inset-0 z-30 w-screen h-screen invisible opacity-0 will-change-[transform,opacity]"
         >
           <img
             data-name="focus-transition-lens-macro"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform-origin-center w-[100vh] h-[100vh] will-change-transform"
             src={BASE_URL + '/assets/images/lens_macro.webp'}
             alt="Focus"
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform-origin-center w-[100vh] h-[100vh]"
           />
         </div>
         <div
@@ -1339,8 +1358,8 @@ function App() {
           <h1 data-name="product-carousel-title" className="text-ink text-display-md font-bold mb-8 pl-12">
             Welcome to IRIS
           </h1>
-          <div data-name="product-carousel-viewport" className="max-w-[100vw] overflow-hidden h-full grow pb-8">
-            <div data-name="product-carousel-track" className="h-full pl-14 flex">
+          <div data-name="product-carousel-viewport" className="max-w-[100vw] overflow-hidden h-full grow pb-8 will-change-transform">
+            <div data-name="product-carousel-track" className="h-full pl-14 flex will-change-transform">
               {PRODUCT_CAROUSEL_ITEMS.map((item) => (
                 <div
                   data-name="product-carousel-item"
@@ -1421,9 +1440,9 @@ function App() {
               <div data-name="video-layers-poster-container" className="grow w-full h-full relative overflow-hidden">
                 <img
                   data-name="video-layers-poster"
+                  className="absolute top-0 left-0 w-full h-full object-cover will-change-transform"
                   src={BASE_URL + '/assets/images/exposing_layers_poster.webp'}
                   alt="Video Layers"
-                  className="absolute top-0 left-0 w-full h-full object-cover"
                 />
               </div>
             </div>
@@ -1442,7 +1461,7 @@ function App() {
             {/* actual wheel */}
             <div
               data-name="color-wheel"
-              className="absolute top-1/2 left-20 -translate-y-1/2 -translate-x-1/2 rounded-full h-[110vh] aspect-square z-20"
+              className="absolute top-1/2 left-20 -translate-y-1/2 -translate-x-1/2 rounded-full h-[110vh] aspect-square z-20 will-change-transform"
             >
               {COLORS.map((color) => {
                 return (
@@ -1457,7 +1476,7 @@ function App() {
             </div>
 
             {/* images */}
-            <div data-name="color-wheel-images" className="absolute top-0 right-0 w-full h-full z-10 origin-[0px_50%]">
+            <div data-name="color-wheel-images" className="absolute top-0 right-0 w-full h-full z-10 origin-[0px_50%] will-change-transform">
               {COLORS.map((color) => {
                 return (
                   <div
@@ -1479,13 +1498,13 @@ function App() {
           data-name="footer-product"
           src={BASE_URL + '/assets/images/footer-product.webp'}
           alt="Footer"
-          className="w-auto h-2/3 object-cover absolute bottom-0 right-1/12"
+          className="w-auto h-2/3 object-cover absolute bottom-0 right-1/12 will-change-transform"
         />
         <div className="relative z-10 flex flex-col h-full">
-          <p data-name="footer-title" className="text-bone text-display-xs font-mono opacity-80 mb-4">
+          <p data-name="footer-title" className="text-bone text-display-xs font-mono opacity-80 mb-4 will-change-transform">
             Built for the ones who care.
           </p>
-          <p data-name="footer-subtitle" className="text-bone text-display-md font-bold leading-none tracking-widest">
+          <p data-name="footer-subtitle" className="text-bone text-display-md font-bold leading-none tracking-widest will-change-transform">
             IRIS
           </p>
           <button className="text-ink text-display-xs font-mono opacity-80 bg-bone px-8 py-3 rounded-full mt-auto w-fit cursor-pointer hover:bg-white transition-all duration-300">
