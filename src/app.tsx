@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initGsap } from './utils/gsap';
 import {
+  BASE_URL,
   COLOR_WHEEL_COLORS_STEP,
   COLOR_WHEEL_IMAGE_STEP,
   COLORS,
@@ -1146,7 +1147,7 @@ function App() {
       >
         <img
           data-name="hero-still"
-          src="/assets/images/hero-still.png"
+          src={BASE_URL + '/assets/images/hero-still.png'}
           alt="Hero"
           className="w-[50vw] h-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover z-20 transform-3d"
         />
@@ -1196,13 +1197,13 @@ function App() {
         <div id="product-reveal" className="w-[30vh] h-[45vh] absolute bottom-1/5 left-1/2 -translate-x-1/2 z-30">
           <img
             data-name="hero-product-silhouette"
-            src="/assets/images/product_silhouette.png"
+            src={BASE_URL + '/assets/images/product_silhouette.png'}
             alt="Hero"
             className="w-full h-full absolute inset-0 object-cover z-30"
           />
           <img
             data-name="hero-product-reveal"
-            src="/assets/images/product_reveal_front.png"
+            src={BASE_URL + '/assets/images/product_reveal_front.png'}
             alt="Hero"
             className="w-full h-full absolute inset-0 object-cover z-30"
           />
@@ -1227,26 +1228,26 @@ function App() {
             >
               <img
                 data-name="city-night-sharp"
-                src="/assets/images/ch1_city_night_sharp.png"
+                src={BASE_URL + '/assets/images/ch1_city_night_sharp.png'}
                 alt="Cinema"
                 className="absolute top-0 right-0 bottom-0 w-full h-full object-cover hidden"
               />
               <img
                 data-name="cinema-still-img"
-                src="/assets/images/ch1_city_night.png"
+                src={BASE_URL + '/assets/images/ch1_city_night.png'}
                 alt="Cinema"
                 className="absolute top-0 right-0 bottom-0 h-full object-cover"
               />
               <div data-name="light-adjustment-knob" className="absolute top-1/2 left-0 h-[25vh]">
                 <img
                   data-name="light-adjustment-knob-product"
-                  src="/assets/images/product_light_knob.png"
+                  src={BASE_URL + '/assets/images/product_light_knob.png'}
                   alt="Light Adjustment"
                   className="w-auto h-full object-cover"
                 />
                 <img
                   data-name="light-adjustment-knob-gear"
-                  src="/assets/images/light_knob_gear.png"
+                  src={BASE_URL + '/assets/images/light_knob_gear.png'}
                   alt="Light Adjustment"
                   className="absolute top-[36%] left-[70%] w-auto h-[40%] object-cover"
                 />
@@ -1255,7 +1256,7 @@ function App() {
             <div data-name="cinema-still" className="rounded-xl overflow-hidden w-full relative shrink">
               <img
                 data-name="cinema-still-img"
-                src="/assets/images/hero_still_02.webp"
+                src={BASE_URL + '/assets/images/hero_still_02.webp'}
                 alt="Cinema"
                 className="absolute top-0 right-0 bottom-0 h-full object-cover"
               />
@@ -1263,7 +1264,7 @@ function App() {
             <div data-name="cinema-still" className="rounded-xl overflow-hidden w-full relative shrink">
               <img
                 data-name="cinema-still-img"
-                src="/assets/images/hero_still_03.webp"
+                src={BASE_URL + '/assets/images/hero_still_03.webp'}
                 alt="Cinema"
                 className="absolute top-0 right-0 bottom-0 h-full object-cover"
               />
@@ -1323,13 +1324,13 @@ function App() {
           <div data-name="focus-object-container" className="col-span-1 relative w-full h-full overflow-hidden">
             <img
               data-name="focus-object-img"
-              src="/assets/images/ch2_subject_still.webp"
+              src={BASE_URL + '/assets/images/ch2_subject_still.webp'}
               alt="Focus"
               className="absolute top-0 left-0 w-full h-full object-cover"
             />
             <img
               data-name="focus-grid-svg"
-              src="/assets/svgs/focus_grid.svg"
+              src={BASE_URL + '/assets/svgs/focus_grid.svg'}
               alt="grid"
               className="absolute top-[20%] right-[18%] w-[25vw] h-[25vw] object-cover"
             />
@@ -1341,7 +1342,7 @@ function App() {
         >
           <img
             data-name="focus-transition-lens-macro"
-            src="/assets/images/lens_macro.png"
+            src={BASE_URL + '/assets/images/lens_macro.png'}
             alt="Focus"
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform-origin-center w-[100vh] h-[100vh]"
           />
@@ -1428,7 +1429,7 @@ function App() {
             <div data-name="video-layers-container" className="w-full h-full col-span-1 border-r">
               <video
                 data-name="video-layers-video"
-                src="/assets/videos/exposing-layers.mp4"
+                src={BASE_URL + '/assets/videos/exposing-layers.mp4'}
                 className="w-full h-full object-cover"
                 muted
               />
@@ -1445,7 +1446,7 @@ function App() {
               <div data-name="video-layers-poster-container" className="grow w-full h-full relative overflow-hidden">
                 <img
                   data-name="video-layers-poster"
-                  src="/assets/images/exposing_layers_poster.png"
+                  src={BASE_URL + '/assets/images/exposing_layers_poster.png'}
                   alt="Video Layers"
                   className="absolute top-0 left-0 w-full h-full object-cover"
                 />
@@ -1498,7 +1499,7 @@ function App() {
       <footer className="w-full h-[60vh] p-16 bg-ink text-bone relative overflow-hidden">
         <img
           data-name="footer-product"
-          src="/assets/images/footer-product.png"
+          src={BASE_URL + '/assets/images/footer-product.png'}
           alt="Footer"
           className="w-auto h-2/3 object-cover absolute bottom-0 right-1/12"
         />

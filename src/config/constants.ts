@@ -97,3 +97,5 @@ export const COLORS = [
 ];
 export const COLOR_WHEEL_COLORS_STEP = 40;
 export const COLOR_WHEEL_IMAGE_STEP = 40;
+
+export const BASE_URL = import.meta.env.VITE_NODE_ENV === 'production' ? '/iris' : '';
