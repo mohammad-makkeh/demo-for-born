@@ -24,7 +24,6 @@ function App() {
     rescanDelayMs: 200,
     lockScroll: true
   });
-  console.log(progress, isLoading, error);
 
   useGSAP(() => {
     const titleSplit = new SplitText(`#${SCENE_IDS.HERO} [data-name="hero-title"]`, { type: 'chars' });
@@ -92,23 +91,16 @@ function App() {
       },
       '1.5'
     );
-    heroTl.to(
-      `#${SCENE_IDS.HERO} [data-name="hero-still"]`,
-      {
-        z: 1170,
-        duration: 2
-      },
-      '1.5'
-    );
     heroTl
       .to(
-        `#${SCENE_IDS.HERO} [data-name="growing-circle"]`,
+        `#${SCENE_IDS.HERO} [data-name="hero-still"]`,
         {
-          backgroundColor: 'white'
+          z: 1170,
+          duration: 2
         },
-        '>-0.2'
+        '1.5'
       )
-      .addLabel('product-reveal-start');
+      .addLabel('product-reveal-start', '>-0.2');
     heroTl.to(
       `#${SCENE_IDS.HERO} [data-name="fully-dotted-grid"]`,
       {
@@ -799,15 +791,31 @@ function App() {
       progress: 0
     };
 
+    let last = 0;
+    const fps = 60;
+    const frameMs = 1000 / fps;
+
+    const clampTime = (t: number) => {
+      const d = videoLayersVideo.duration || 0;
+      return Math.max(0, Math.min(t, Math.max(0, d - 0.001)));
+    };
+
     const productCarouselTl = gsap.timeline({
       scrollTrigger: {
         trigger: productCarouselScene,
         start: 'top top',
         end: () => `+=${(productCarouselViewport?.scrollWidth || 0) + 2200}`,
         pin: true,
-        scrub: 1.5,
+        scrub: 1,
         onUpdate: () => {
-          videoLayersVideo.currentTime = videoProxy.progress;
+          const now = performance.now();
+          if (now - last < frameMs) return;
+          last = now;
+
+          const target = clampTime(videoProxy.progress);
+          if (Math.abs(videoLayersVideo.currentTime - target) > 1 / 240) {
+            videoLayersVideo.currentTime = target;
+          }
         },
         invalidateOnRefresh: true
       }
@@ -852,57 +860,16 @@ function App() {
       duration: 1,
       ease: 'none'
     });
-
-    const carouselImageElements = Array.from(productCarouselItemImgs) as HTMLElement[];
-    const carouselImageCount = carouselImageElements.length;
-    const carouselImageProgressByIndex = carouselImageElements.map((_, index) =>
-      carouselImageCount <= 1 ? 0 : index / (carouselImageCount - 1)
+    productCarouselTl.to(
+      productCarouselItemImgs,
+      {
+        xPercent: -20,
+        duration: 0.4,
+        stagger: 0.15,
+        ease: 'none'
+      },
+      '<'
     );
-    const carouselImageSetXPercent = carouselImageElements.map((imgElement) =>
-      gsap.quickSetter(imgElement, 'xPercent')
-    );
-    const carouselImagePanMaxPercent = 20;
-    const carouselImagePanDirection = -1;
-    const carouselImageMinSpeedFactor = 0.5;
-    const carouselImageMaxSpeedFactor = window.innerWidth * 0.003;
-    const carouselImageInfluenceRangeInItems = 2.5;
-    const carouselImageProximityExponent = 0.3;
-
-    const carouselImageSpeedRange = carouselImageMaxSpeedFactor - carouselImageMinSpeedFactor;
-    const carouselImageItemSpan = Math.max(1, carouselImageCount - 1);
-    const carouselImageInfluenceRangeNormalized = Math.min(
-      1,
-      carouselImageInfluenceRangeInItems / carouselImageItemSpan
-    );
-    const carouselImageInfluenceRangeInverse =
-      carouselImageInfluenceRangeNormalized > 0 ? 1 / carouselImageInfluenceRangeNormalized : 0;
-
-    ScrollTrigger.create({
-      trigger: productCarouselTrack,
-      containerAnimation: productCarouselTl,
-      onUpdate: (self) => {
-        if (!carouselImageCount) return;
-        const scrollProgress = self.progress;
-        const basePanAmount = scrollProgress * carouselImagePanMaxPercent;
-
-        for (let index = 0; index < carouselImageCount; index += 1) {
-          const itemProgress = carouselImageProgressByIndex[index];
-          const progressDelta = scrollProgress - itemProgress;
-          const distanceFromProgress = progressDelta < 0 ? -progressDelta : progressDelta;
-          const normalizedDistance =
-            carouselImageInfluenceRangeInverse > 0 ? distanceFromProgress * carouselImageInfluenceRangeInverse : 1;
-          const clampedDistance = normalizedDistance > 1 ? 1 : normalizedDistance;
-          const proximity = 1 - clampedDistance;
-          const easedProximity = Math.pow(proximity, carouselImageProximityExponent);
-          const speedFactor = carouselImageMinSpeedFactor + carouselImageSpeedRange * easedProximity;
-          const panAmount = basePanAmount * speedFactor;
-          const clampedPan =
-            panAmount > carouselImagePanMaxPercent ? carouselImagePanMaxPercent : panAmount < 0 ? 0 : panAmount;
-
-          carouselImageSetXPercent[index](carouselImagePanDirection * clampedPan);
-        }
-      }
-    });
 
     videoLayersVideo.preload = 'auto';
     videoLayersVideo.muted = true; // avoids some browser weirdness
@@ -939,7 +906,7 @@ function App() {
         videoProxy,
         {
           progress: videoDuration,
-          duration: 4,
+          duration: 1.5,
           ease: 'none'
         },
         'video-layers-in-view'
@@ -1059,7 +1026,7 @@ function App() {
       colorsGalleryTl.to(
         colorWheel,
         {
-          background: `linear-gradient(${(index + 2.5) * COLOR_WHEEL_COLORS_STEP}deg, ${color.hex} 20%, var(--color-bone))`,
+          background: `linear-gradient(${(index + 2.5) * COLOR_WHEEL_COLORS_STEP}deg, ${color.hex} 40%, var(--color-bone))`,
           duration: 3.5
         },
         '0+=' + index * 3.5
@@ -1121,6 +1088,14 @@ function App() {
     );
   });
 
+  if (error) {
+    return (
+      <div className="fixed inset-0 bg-ink text-bone z-50 flex flex-col items-center justify-center font-mono">
+        <div className="text-display-xs mb-4">Error loading assets: {error.message}</div>
+      </div>
+    );
+  }
+
   return (
     <main className="min-h-[500vh] bg-ink text-bone">
       {/* Preloader */}
@@ -1147,7 +1122,7 @@ function App() {
       >
         <img
           data-name="hero-still"
-          src={BASE_URL + '/assets/images/hero-still.png'}
+          src={BASE_URL + '/assets/images/hero-still.webp'}
           alt="Hero"
           className="w-[50vw] h-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 object-cover z-20 transform-3d"
         />
@@ -1197,13 +1172,13 @@ function App() {
         <div id="product-reveal" className="w-[30vh] h-[45vh] absolute bottom-1/5 left-1/2 -translate-x-1/2 z-30">
           <img
             data-name="hero-product-silhouette"
-            src={BASE_URL + '/assets/images/product_silhouette.png'}
+            src={BASE_URL + '/assets/images/product_silhouette.webp'}
             alt="Hero"
             className="w-full h-full absolute inset-0 object-cover z-30"
           />
           <img
             data-name="hero-product-reveal"
-            src={BASE_URL + '/assets/images/product_reveal_front.png'}
+            src={BASE_URL + '/assets/images/product_reveal_front.webp'}
             alt="Hero"
             className="w-full h-full absolute inset-0 object-cover z-30"
           />
@@ -1228,26 +1203,26 @@ function App() {
             >
               <img
                 data-name="city-night-sharp"
-                src={BASE_URL + '/assets/images/ch1_city_night_sharp.png'}
+                src={BASE_URL + '/assets/images/ch1_city_night_sharp.webp'}
                 alt="Cinema"
                 className="absolute top-0 right-0 bottom-0 w-full h-full object-cover hidden"
               />
               <img
                 data-name="cinema-still-img"
-                src={BASE_URL + '/assets/images/ch1_city_night.png'}
+                src={BASE_URL + '/assets/images/ch1_city_night.webp'}
                 alt="Cinema"
                 className="absolute top-0 right-0 bottom-0 h-full object-cover"
               />
               <div data-name="light-adjustment-knob" className="absolute top-1/2 left-0 h-[25vh]">
                 <img
                   data-name="light-adjustment-knob-product"
-                  src={BASE_URL + '/assets/images/product_light_knob.png'}
+                  src={BASE_URL + '/assets/images/product_light_knob.webp'}
                   alt="Light Adjustment"
                   className="w-auto h-full object-cover"
                 />
                 <img
                   data-name="light-adjustment-knob-gear"
-                  src={BASE_URL + '/assets/images/light_knob_gear.png'}
+                  src={BASE_URL + '/assets/images/light_knob_gear.webp'}
                   alt="Light Adjustment"
                   className="absolute top-[36%] left-[70%] w-auto h-[40%] object-cover"
                 />
@@ -1342,7 +1317,7 @@ function App() {
         >
           <img
             data-name="focus-transition-lens-macro"
-            src={BASE_URL + '/assets/images/lens_macro.png'}
+            src={BASE_URL + '/assets/images/lens_macro.webp'}
             alt="Focus"
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform-origin-center w-[100vh] h-[100vh]"
           />
@@ -1446,7 +1421,7 @@ function App() {
               <div data-name="video-layers-poster-container" className="grow w-full h-full relative overflow-hidden">
                 <img
                   data-name="video-layers-poster"
-                  src={BASE_URL + '/assets/images/exposing_layers_poster.png'}
+                  src={BASE_URL + '/assets/images/exposing_layers_poster.webp'}
                   alt="Video Layers"
                   className="absolute top-0 left-0 w-full h-full object-cover"
                 />
@@ -1485,7 +1460,10 @@ function App() {
             <div data-name="color-wheel-images" className="absolute top-0 right-0 w-full h-full z-10 origin-[0px_50%]">
               {COLORS.map((color) => {
                 return (
-                  <div className="absolute bg-pink-400 top-0 right-0 w-full h-full z-10  origin-[0px_50%]">
+                  <div
+                    key={color.id + color.label}
+                    className="absolute bg-pink-400 top-0 right-0 w-full h-full z-10  origin-[0px_50%]"
+                  >
                     <img className="absolute w-full h-full inset-0 object-cover" src={color.img} />
                   </div>
                 );
@@ -1499,7 +1477,7 @@ function App() {
       <footer className="w-full h-[60vh] p-16 bg-ink text-bone relative overflow-hidden">
         <img
           data-name="footer-product"
-          src={BASE_URL + '/assets/images/footer-product.png'}
+          src={BASE_URL + '/assets/images/footer-product.webp'}
           alt="Footer"
           className="w-auto h-2/3 object-cover absolute bottom-0 right-1/12"
         />

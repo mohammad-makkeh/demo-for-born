@@ -13,7 +13,7 @@ export const SCENE_IDS = {
 export const PRODUCT_CAROUSEL_ITEMS = [
   {
     id: 3,
-    image: BASE_URL + '/assets/images/filmstrip_panel_04.png',
+    image: BASE_URL + '/assets/images/filmstrip_panel_04.webp',
     title: 'Tactile Buttons',
     subtitle: 'Just feels right - feels better.',
     cardType: 'overlay'
@@ -21,7 +21,7 @@ export const PRODUCT_CAROUSEL_ITEMS = [
 
   {
     id: 2,
-    image: BASE_URL + '/assets/images/filmstrip_panel_02.png',
+    image: BASE_URL + '/assets/images/filmstrip_panel_02.webp',
     title: 'Cutting Edge Lens System.',
     cardType: 'specs',
     specs: [
@@ -33,14 +33,14 @@ export const PRODUCT_CAROUSEL_ITEMS = [
   },
   {
     id: 1,
-    image: BASE_URL + '/assets/images/filmstrip_panel_01.png',
+    image: BASE_URL + '/assets/images/filmstrip_panel_01.webp',
     title: 'Simple To Use.',
     subtitle: 'As simple as a camera can get',
     cardType: 'overlay'
   },
   {
     id: 4,
-    image: BASE_URL + '/assets/images/filmstrip_panel_03.png',
+    image: BASE_URL + '/assets/images/filmstrip_panel_03.webp',
     title: 'High Quality Titanium.',
     cardType: 'specs',
     specs: [
@@ -55,44 +55,44 @@ export const PRODUCT_CAROUSEL_ITEMS = [
 export const COLORS = [
   {
     id: 'silver',
-    label: 'Metallic Silver',
-    img: BASE_URL + '/assets/images/product-silver.png',
+    label: 'Timeless Silver',
+    img: BASE_URL + '/assets/images/product-silver.webp',
     hex: '#a4a4a4'
   },
   {
     id: 'gold',
     label: 'Priceless Gold',
-    img: BASE_URL + '/assets/images/product-gold.png',
+    img: BASE_URL + '/assets/images/product-gold.webp',
     hex: '#cca054'
   },
   {
     id: 'black',
     label: 'Matte Black',
-    img: BASE_URL + '/assets/images/product-black.png',
-    hex: '#262626'
+    img: BASE_URL + '/assets/images/product-black.webp',
+    hex: '#515151'
   },
   {
     id: 'pink',
     label: 'Brave Pink',
-    img: BASE_URL + '/assets/images/product-pink.png',
+    img: BASE_URL + '/assets/images/product-pink.webp',
     hex: '#d2a3b2'
   },
   {
     id: 'green',
     label: 'Smart Green',
-    img: BASE_URL + '/assets/images/product-green.png',
+    img: BASE_URL + '/assets/images/product-green.webp',
     hex: '#9eb890'
   },
   {
     id: 'blue',
     label: 'Cool Blue',
-    img: BASE_URL + '/assets/images/product-blue.png',
+    img: BASE_URL + '/assets/images/product-blue.webp',
     hex: '#6eadaf'
   },
   {
     id: 'bronze',
     label: 'Classic Bronze',
-    img: BASE_URL + '/assets/images/product-bronze.png',
+    img: BASE_URL + '/assets/images/product-bronze.webp',
     hex: '#af7960'
   }
 ];

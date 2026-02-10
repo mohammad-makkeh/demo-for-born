@@ -74,7 +74,7 @@ export function usePreloadAssets(opts: Options = {}): Result {
     root = null,
     videoMode = 'metadata',
     weights = { fonts: 10, images: 60, videos: 40 },
-    timeoutMs = 20000,
+    timeoutMs = 10000,
     lockScroll = true,
     rescanDelayMs = 0
   } = opts;
@@ -163,7 +163,7 @@ export function usePreloadAssets(opts: Options = {}): Result {
         if (wImages > 0) {
           imgs.forEach((img) => {
             tasks.push(
-              withTimeout(waitForImage(img), timeoutMs, 'Image')
+              withTimeout(waitForImage(img), timeoutMs, `Image ${img.src}`)
                 .catch((e) => setError((prev) => prev ?? e))
                 .finally(() => {
                   imagesDone += 1;
