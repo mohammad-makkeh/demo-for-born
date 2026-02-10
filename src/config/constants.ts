@@ -1,4 +1,5 @@
 export const DEBUG_MODE = false;
+export const BASE_URL = import.meta.env.VITE_NODE_ENV === 'production' ? '/iris' : '';
 
 export const SCENE_IDS = {
   HERO: 'hero-scene',
@@ -12,7 +13,7 @@ export const SCENE_IDS = {
 export const PRODUCT_CAROUSEL_ITEMS = [
   {
     id: 3,
-    image: '/assets/images/filmstrip_panel_04.png',
+    image: BASE_URL + '/assets/images/filmstrip_panel_04.png',
     title: 'Tactile Buttons',
     subtitle: 'Just feels right - feels better.',
     cardType: 'overlay'
@@ -20,7 +21,7 @@ export const PRODUCT_CAROUSEL_ITEMS = [
 
   {
     id: 2,
-    image: '/assets/images/filmstrip_panel_02.png',
+    image: BASE_URL + '/assets/images/filmstrip_panel_02.png',
     title: 'Cutting Edge Lens System.',
     cardType: 'specs',
     specs: [
@@ -32,14 +33,14 @@ export const PRODUCT_CAROUSEL_ITEMS = [
   },
   {
     id: 1,
-    image: '/assets/images/filmstrip_panel_01.png',
+    image: BASE_URL + '/assets/images/filmstrip_panel_01.png',
     title: 'Simple To Use.',
     subtitle: 'As simple as a camera can get',
     cardType: 'overlay'
   },
   {
     id: 4,
-    image: '/assets/images/filmstrip_panel_03.png',
+    image: BASE_URL + '/assets/images/filmstrip_panel_03.png',
     title: 'High Quality Titanium.',
     cardType: 'specs',
     specs: [
@@ -55,47 +56,45 @@ export const COLORS = [
   {
     id: 'silver',
     label: 'Metallic Silver',
-    img: '/assets/images/product-silver.png',
+    img: BASE_URL + '/assets/images/product-silver.png',
     hex: '#a4a4a4'
   },
   {
     id: 'gold',
     label: 'Priceless Gold',
-    img: '/assets/images/product-gold.png',
+    img: BASE_URL + '/assets/images/product-gold.png',
     hex: '#cca054'
   },
   {
     id: 'black',
     label: 'Matte Black',
-    img: '/assets/images/product-black.png',
+    img: BASE_URL + '/assets/images/product-black.png',
     hex: '#262626'
   },
   {
     id: 'pink',
     label: 'Brave Pink',
-    img: '/assets/images/product-pink.png',
+    img: BASE_URL + '/assets/images/product-pink.png',
     hex: '#d2a3b2'
   },
   {
     id: 'green',
     label: 'Smart Green',
-    img: '/assets/images/product-green.png',
+    img: BASE_URL + '/assets/images/product-green.png',
     hex: '#9eb890'
   },
   {
     id: 'blue',
     label: 'Cool Blue',
-    img: '/assets/images/product-blue.png',
+    img: BASE_URL + '/assets/images/product-blue.png',
     hex: '#6eadaf'
   },
   {
     id: 'bronze',
     label: 'Classic Bronze',
-    img: '/assets/images/product-bronze.png',
+    img: BASE_URL + '/assets/images/product-bronze.png',
     hex: '#af7960'
   }
 ];
 export const COLOR_WHEEL_COLORS_STEP = 40;
 export const COLOR_WHEEL_IMAGE_STEP = 40;
-
-export const BASE_URL = import.meta.env.VITE_NODE_ENV === 'production' ? '/iris' : '';
