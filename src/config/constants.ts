@@ -1,6 +1,10 @@
 export const DEBUG_MODE = false;
 export const BASE_URL = import.meta.env.VITE_NODE_ENV === 'production' ? '/iris' : '';
 
+/** Breakpoint (px) below which mobile layout and reduced animations are used */
+export const MOBILE_BREAKPOINT = 768;
+export const isMobile = () => typeof window !== 'undefined' && window.innerWidth < MOBILE_BREAKPOINT;
+
 export const SCENE_IDS = {
   HERO: 'hero-scene',
   CINEMA: 'cinema-scene',
@@ -98,3 +102,14 @@ export const COLORS = [
 ];
 export const COLOR_WHEEL_COLORS_STEP = 40;
 export const COLOR_WHEEL_IMAGE_STEP = 40;
+
+export type AnimConfig = {
+  heroEnd: string;
+  cinemaScrollEnd: string;
+  cinemaPinEnd: string;
+  focusEnd: string;
+  useSplitText: boolean;
+  skipCinema: boolean;
+  skipFocusTransition: boolean;
+  colorsUseGrid: boolean;
+};

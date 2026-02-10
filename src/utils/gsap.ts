@@ -13,7 +13,7 @@ export const initGsap = () => {
   gsap.defaults({ duration: 0.5, ease: 'power2.out' });
   ScrollTrigger.defaults({
     markers: DEBUG_MODE,
-    fastScrollEnd: 800
+    fastScrollEnd: 1500
   });
   gsap.config({
     autoSleep: 5 * 60,
@@ -22,7 +22,25 @@ export const initGsap = () => {
 
   ScrollTrigger.normalizeScroll(true);
   ScrollTrigger.config({
-    ignoreMobileResize: true
+    ignoreMobileResize: false // allow refresh on resize for responsive layouts
+  });
+  setupScrollTriggerResize();
+};
+
+/** Call after layout changes or breakpoint changes so ScrollTrigger recalculates */
+export const refreshScrollTrigger = () => {
+  ScrollTrigger.refresh();
+};
+
+let resizeTicker: number | null = null;
+export const setupScrollTriggerResize = () => {
+  if (typeof window === 'undefined') return;
+  window.addEventListener('resize', () => {
+    if (resizeTicker) cancelAnimationFrame(resizeTicker);
+    resizeTicker = requestAnimationFrame(() => {
+      resizeTicker = null;
+      ScrollTrigger.refresh();
+    });
   });
 };
 
